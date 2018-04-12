@@ -5,6 +5,7 @@ import sys
 import tarfile
 import tensorflow as tf
 import zipfile
+import argparse
 
 from collections import defaultdict
 from io import StringIO
@@ -76,7 +77,7 @@ category_index = label_map_util.create_category_index(categories)
 # image2.jpg
 # If you want to test the code with your images, just add path to the images to the TEST_IMAGE_PATHS.
 PATH_TO_TEST_IMAGES_DIR = 'test_images'
-TEST_IMAGE_PATHS = [ os.path.join(PATH_TO_TEST_IMAGES_DIR, 'smaller-{}.jpg'.format(i)) for i in range(0, 7) ]
+TEST_IMAGE_PATHS = sys.argv[1:] #[ os.path.join(PATH_TO_TEST_IMAGES_DIR, 'smaller-{}.jpg'.format(i)) for i in range(0, 7) ]
 
 # Size, in inches, of the output images.
 IMAGE_SIZE = (12, 8)
@@ -129,6 +130,12 @@ def run_inference_for_single_image(image, graph):
 
 for image_path in TEST_IMAGE_PATHS:
   image = Image.open(image_path)
+
+  basewidth = 600
+  wpercent = (basewidth/float(image.size[0]))
+  hsize = int((float(image.size[1])*float(wpercent)))
+  image = image.resize((basewidth,hsize), Image.BILINEAR)
+
   # the array based representation of the image will be used later in order to prepare the
   # result image with boxes and labels on it.
   image_np = load_image_into_numpy_array(image)
@@ -142,7 +149,6 @@ for image_path in TEST_IMAGE_PATHS:
 
   topCls = [ category_index[classes[i]]['name'] for i in range(len(scores)) if scores[i] > 0.3]
 
-  print(image_path)
-  print('\t' + ', '.join(set(topCls)))
+  print(image_path + '::' + ','.join(set(topCls)))
 
  
