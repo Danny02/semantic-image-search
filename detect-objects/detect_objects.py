@@ -23,18 +23,20 @@ def load_image_into_numpy_array(image):
   return np.array(image.getdata()).reshape(
       (im_height, im_width, 3)).astype(np.uint8)
 
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+
 # What model to download.
 MODEL_NAME = 'ssd_mobilenet_v1_coco_2017_11_17'
-MODEL_DIR = 'models'
+MODEL_DIR = os.path.join(SCRIPT_DIR, 'models')
 MODEL_FILE = MODEL_NAME + '.tar.gz'
-MODEL_FILE_LOCAL = MODEL_DIR + '/' + MODEL_FILE
+MODEL_FILE_LOCAL = os.path.join(MODEL_DIR, MODEL_FILE)
 DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
-PATH_TO_CKPT = MODEL_DIR + '/' + MODEL_NAME + '/frozen_inference_graph.pb'
+PATH_TO_CKPT = os.path.join(MODEL_DIR, MODEL_NAME, 'frozen_inference_graph.pb')
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = os.path.join('data', 'mscoco_label_map.pbtxt')
+PATH_TO_LABELS = os.path.join(SCRIPT_DIR, 'data', 'mscoco_label_map.pbtxt')
 
 NUM_CLASSES = 90
 
@@ -58,7 +60,7 @@ if not os.path.exists(PATH_TO_CKPT):
   for file in tar_file.getmembers():
     file_name = os.path.basename(file.name)
     if 'frozen_inference_graph.pb' in file_name:
-      tar_file.extract(file, os.getcwd() + '/' + MODEL_DIR)
+      tar_file.extract(file, MODEL_DIR)
 
 detection_graph = tf.Graph()
 with detection_graph.as_default():
@@ -149,6 +151,6 @@ for image_path in TEST_IMAGE_PATHS:
 
   topCls = [ category_index[classes[i]]['name'] for i in range(len(scores)) if scores[i] > 0.3]
 
-  print(image_path + '::' + ','.join(set(topCls)))
+  print(image_path + '::' + ', '.join(set(topCls)))
 
  
