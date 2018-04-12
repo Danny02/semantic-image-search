@@ -136,6 +136,13 @@ for image_path in TEST_IMAGE_PATHS:
   image_np_expanded = np.expand_dims(image_np, axis=0)
   # Actual detection.
   output_dict = run_inference_for_single_image(image_np, detection_graph)
-  print(output_dict)
+ 
+  scores = output_dict['detection_scores']
+  classes = output_dict['detection_classes']
+
+  topCls = [ category_index[classes[i]]['name'] for i in range(len(scores)) if scores[i] > 0.3]
+
+  print(image_path)
+  print('\t' + ', '.join(set(topCls)))
 
  
