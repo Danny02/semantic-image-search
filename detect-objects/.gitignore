@@ -1,0 +1,5 @@
+models/
+.vscode/
+__py_cache__
+protos/*.py
+test_images/*.jpg
