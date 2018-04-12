@@ -7,18 +7,12 @@
     <groupId>de.senacor.bastianseifert</groupId>
     <artifactId>tagsearch</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <exec.mainClass>TagSearch</exec.mainClass>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -28,5 +22,24 @@
         </dependency>
     </dependencies>
 
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.chrisdchristo</groupId>
+                <artifactId>capsule-maven-plugin</artifactId>
+                <version>1.5.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>    
+                </executions>
+                <configuration>
+                    <appClass>${exec.mainClass}</appClass>
+                    <type>fat</type>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

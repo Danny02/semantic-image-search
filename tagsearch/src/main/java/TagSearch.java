@@ -17,20 +17,15 @@ import java.util.stream.Stream;
 public class TagSearch {
     public static void main(String[] args) {
         try {
-            //String path = args[0];
-            //String keyword = args[1];
-
-            String path = "c:/beispielbilder";
-
-            String keyword = "maus";
+            String path = args[0];
+            String keyword = args[1];
 
             try (Stream<Path> paths = Files.walk(Paths.get(path))) {
-                List<File> keywords = paths
+                    paths
                         .filter(Files::isRegularFile)
                         .filter(p -> p.toString().endsWith(".jpg"))
                         .map(Path::toFile)
                         .filter(file -> {
-                            System.out.println(file);
                                     Metadata metadata = null;
                                     try {
                                         metadata = ImageMetadataReader.readMetadata(file);
@@ -46,11 +41,7 @@ public class TagSearch {
 
                                 }
                         )
-                        .collect(Collectors.toList());
-
-
-                System.out.println(keywords);
-
+                        .forEach(System.out::println);
 
             }
 
