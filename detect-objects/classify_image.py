@@ -127,7 +127,7 @@ def create_graph():
     _ = tf.import_graph_def(graph_def, name='')
 
 
-def run_inference_on_image(image):
+def run_inference_on_image():
   """Runs inference on an image.
 
   Args:
@@ -136,35 +136,37 @@ def run_inference_on_image(image):
   Returns:
     Nothing
   """
-  if not tf.gfile.Exists(image):
-    tf.logging.fatal('File does not exist %s', image)
-  image_data = tf.gfile.FastGFile(image, 'rb').read()
+  for image in FLAGS.image_files:
+    if not tf.gfile.Exists(image):
+      tf.logging.fatal('File does not exist %s', image)
+    image_data = tf.gfile.FastGFile(image, 'rb').read()
 
-  # Creates graph from saved GraphDef.
-  create_graph()
+    # Creates graph from saved GraphDef.
+    create_graph()
 
-  with tf.Session() as sess:
-    # Some useful tensors:
-    # 'softmax:0': A tensor containing the normalized prediction across
-    #   1000 labels.
-    # 'pool_3:0': A tensor containing the next-to-last layer containing 2048
-    #   float description of the image.
-    # 'DecodeJpeg/contents:0': A tensor containing a string providing JPEG
-    #   encoding of the image.
-    # Runs the softmax tensor by feeding the image_data as input to the graph.
-    softmax_tensor = sess.graph.get_tensor_by_name('softmax:0')
-    predictions = sess.run(softmax_tensor,
-                           {'DecodeJpeg/contents:0': image_data})
-    predictions = np.squeeze(predictions)
+    with tf.Session() as sess:
+      # Some useful tensors:
+      # 'softmax:0': A tensor containing the normalized prediction across
+      #   1000 labels.
+      # 'pool_3:0': A tensor containing the next-to-last layer containing 2048
+      #   float description of the image.
+      # 'DecodeJpeg/contents:0': A tensor containing a string providing JPEG
+      #   encoding of the image.
+      # Runs the softmax tensor by feeding the image_data as input to the graph.
+      softmax_tensor = sess.graph.get_tensor_by_name('softmax:0')
+      predictions = sess.run(softmax_tensor,
+                            {'DecodeJpeg/contents:0': image_data})
+      predictions = np.squeeze(predictions)
 
-    # Creates node ID --> English string lookup.
-    node_lookup = NodeLookup()
+      # Creates node ID --> English string lookup.
+      node_lookup = NodeLookup()
 
-    top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
-    for node_id in top_k:
-      human_string = node_lookup.id_to_string(node_id)
-      score = predictions[node_id]
-      print('%s (score = %.5f)' % (human_string, score))
+      top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
+      CONFIDENCE = 0.2
+      topCls = [ node_lookup.id_to_string(node_id) for node_id in top_k if predictions[node_id] > CONFIDENCE]
+      distinct = set(topCls)
+      if len(distinct) > 0:
+        print(image + '::' + ', '.join(distinct))
 
 
 def maybe_download_and_extract():
@@ -188,40 +190,15 @@ def maybe_download_and_extract():
 
 def main(_):
   maybe_download_and_extract()
-  image = (FLAGS.image_file if FLAGS.image_file else
-           os.path.join(FLAGS.model_dir, 'cropped_panda.jpg'))
-  run_inference_on_image(image)
+  run_inference_on_image()
 
+class Foo(object):
+    pass
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser()
-  # classify_image_graph_def.pb:
-  #   Binary representation of the GraphDef protocol buffer.
-  # imagenet_synset_to_human_label_map.txt:
-  #   Map from synset ID to a human readable string.
-  # imagenet_2012_challenge_label_map_proto.pbtxt:
-  #   Text representation of a protocol buffer mapping a label to synset ID.
-  parser.add_argument(
-      '--model_dir',
-      type=str,
-      default='/tmp/imagenet',
-      help="""\
-      Path to classify_image_graph_def.pb,
-      imagenet_synset_to_human_label_map.txt, and
-      imagenet_2012_challenge_label_map_proto.pbtxt.\
-      """
-  )
-  parser.add_argument(
-      '--image_file',
-      type=str,
-      default='',
-      help='Absolute path to image file.'
-  )
-  parser.add_argument(
-      '--num_top_predictions',
-      type=int,
-      default=5,
-      help='Display this many predictions.'
-  )
-  FLAGS, unparsed = parser.parse_known_args()
-  tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  FLAGS = Foo()
+  FLAGS.num_top_predictions = 5
+  FLAGS.model_dir = '/tmp/imagenet'
+  FLAGS.image_files = sys.argv[1:]
+  
+  tf.app.run(main=main, argv=[sys.argv[0]])
