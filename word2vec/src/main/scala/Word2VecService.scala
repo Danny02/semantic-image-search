@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 class Word2VecService() extends Directives {
 
   private val config = ConfigFactory.load()
-  
+
   private val model = new File(config.getString("model"))
   println(s"loading model: $model")
   val vec = WordVectorSerializer.readWord2VecModel(model)
