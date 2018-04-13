@@ -130,7 +130,7 @@ def run_inference_for_single_image(image, graph):
         output_dict['detection_masks'] = output_dict['detection_masks'][0]
   return output_dict
 
-i = 0
+image_prog = 0
 for image_path in TEST_IMAGE_PATHS:
 
   image = Image.open(image_path)
@@ -155,8 +155,8 @@ for image_path in TEST_IMAGE_PATHS:
 
   print(image_path + '::' + ', '.join(set(topCls)))
 
-  i += 1
-  sys.stderr.write('\r>> Image %d/%d' % (i, len(TEST_IMAGE_PATHS)))
+  image_prog += 1
+  sys.stderr.write('\r>> Image %d/%d' % (image_prog, len(TEST_IMAGE_PATHS)))
   sys.stderr.flush()
 
  

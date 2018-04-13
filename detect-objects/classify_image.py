@@ -136,6 +136,7 @@ def run_inference_on_image():
   Returns:
     Nothing
   """
+  image_prog = 0
   for image in FLAGS.image_files:
     if not tf.gfile.Exists(image):
       tf.logging.fatal('File does not exist %s', image)
@@ -167,6 +168,10 @@ def run_inference_on_image():
       distinct = set(topCls)
       if len(distinct) > 0:
         print(image + '::' + ', '.join(distinct))
+
+      image_prog += 1
+      sys.stderr.write('\r>> Image %d/%d' % (image_prog, len(FLAGS.image_files)))
+      sys.stderr.flush()  
 
 
 def maybe_download_and_extract():
