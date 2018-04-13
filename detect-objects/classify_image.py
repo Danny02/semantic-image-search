@@ -136,15 +136,15 @@ def run_inference_on_image():
   Returns:
     Nothing
   """
+
+  # Creates graph from saved GraphDef.
+  create_graph()
+
   image_prog = 0
   for image in FLAGS.image_files:
     if not tf.gfile.Exists(image):
       tf.logging.fatal('File does not exist %s', image)
     image_data = tf.gfile.FastGFile(image, 'rb').read()
-
-    # Creates graph from saved GraphDef.
-    create_graph()
-
     with tf.Session() as sess:
       # Some useful tensors:
       # 'softmax:0': A tensor containing the normalized prediction across
