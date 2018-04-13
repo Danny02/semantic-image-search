@@ -155,7 +155,7 @@ class SemanticImageService() extends Directives with JsonSupport {
         }
       }.toMap
     } finally {
-      jpgs.close();
+      jpgs.close()
     }
 
     println(s"loaded data for ${data.size} images")
