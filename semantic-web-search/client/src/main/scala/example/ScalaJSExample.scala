@@ -21,34 +21,44 @@ object JsDomComponents extends Components(scalatags.JsDom)
 import JsDomComponents._
 
 object ScalaJSExample {
+  implicit def obsFrag[T <% Frag](obs: Observable[T]): Frag = {
+    val first = span().render
+    obs
+      .scan(first) { (last, frag) =>
+        val next = span(frag).render
+        last.parentNode.replaceChild(next, last)
+        next
+      }
+      .subscribe()
+    first
+  }
 
   def main(args: Array[String]): Unit = {
     val searchInput = input(cls := "form-control", placeholder := "e.g. dog, pizza or beach").render
 
+    val predsObs = eventListener(searchInput, "keypress")
+      .debounce(1 second)
+      .map(_ => searchInput.value)
+      .map(SearchApi.searchReq)
+      .switchMap(Observable.fromTask)
+
     val searchSection = section(
-      div(cls := "form-group")(searchInput)
+      div(cls := "form-group")(
+        searchInput,
+        predsObs.map { preds =>
+          div(
+            h2("Predictions"),
+            preds match {
+              case Nil => p("no similar images!")
+              case _   => SFrag(preds)
+            }
+          )
+        }
+      )
     )
 
     val entrypoint = dom.document.getElementById(predSearchId)
     entrypoint.appendChild(searchSection.render)
-
-    eventListener(searchInput, "keypress")
-      .debounce(1 second)
-      .switchMap(e => Observable.fromTask(listSearchResults(searchInput.value)))
-      .subscribe()
-  }
-
-  def listSearchResults(word: String): Task[_] = {
-    val predList = dom.document.getElementById(predListId)
-
-    SearchApi.searchReq(word).map { preds =>
-      predList.innerHTML = ""
-      val predNodes = preds match {
-        case Nil => p("no similar images!")
-        case _   => SFrag(preds)
-      }
-      predList.appendChild(predNodes.render)
-    }
   }
 
   def eventListener(target: EventTarget, event: String): Observable[Event] =

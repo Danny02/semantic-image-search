@@ -2,6 +2,7 @@ val scalaV              = "2.12.4"
 val deeplearningVersion = "0.9.1"
 val nd4jVersion         = "0.9.1"
 val akkaVersion         = "10.0.10"
+val monixVersion        = "3.0.0-RC1"
 
 lazy val server = (project in file("server"))
   .settings(
@@ -20,7 +21,7 @@ lazy val server = (project in file("server"))
 //      "org.nd4j"           % "nd4j-native"           % nd4jVersion classifier "macosx-x86_64-avx2",
       "org.slf4j"      % "slf4j-simple"       % "1.7.25",
       "com.drewnoakes" % "metadata-extractor" % "2.11.0",
-      "io.monix"       %% "monix"             % "3.0.0-RC1"
+      "io.monix"       %% "monix"             % monixVersion
     ),
     WebKeys.packagePrefix in Assets := "public/",
     managedClasspath in Runtime += (packageBin in Assets).value
@@ -34,7 +35,7 @@ lazy val client = (project in file("client"))
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.5",
-      "io.monix"     %%% "monix"       % "3.0.0-RC1",
+      "io.monix"     %%% "monix"       % monixVersion,
       "com.lihaoyi"  %%% "upickle"     % "0.6.5"
     )
   )

@@ -12,9 +12,7 @@ object Pages {
     template("Akka HTTP with Scala.js")(
       header(con)(h1("Semantic Image Search")),
       tags2.main(*.id := mainId, con)(
-        div(*.id := predSearchId),
-        h2("Predictions"),
-        tags2.section(*.id := predListId, *.cls := "d-flex", *.style := "flex-flow: row wrap")
+        div(*.id := predSearchId)
       )
     )
   }
