@@ -147,11 +147,12 @@ for image_path in TEST_IMAGE_PATHS:
   image_np_expanded = np.expand_dims(image_np, axis=0)
   # Actual detection.
   output_dict = run_inference_for_single_image(image_np, detection_graph)
- 
+
   scores = output_dict['detection_scores']
   classes = output_dict['detection_classes']
 
-  topCls = [ category_index[classes[i]]['name'] for i in range(len(scores)) if scores[i] > 0.3]
+  CONFIDENCE = 0.35
+  topCls = [ category_index[classes[i]]['name'] for i in range(len(scores)) if scores[i] > CONFIDENCE]
 
   print(image_path + '::' + ', '.join(set(topCls)))
 
@@ -159,4 +160,3 @@ for image_path in TEST_IMAGE_PATHS:
   sys.stderr.write('\r>> Image %d/%d' % (image_prog, len(TEST_IMAGE_PATHS)))
   sys.stderr.flush()
 
- 

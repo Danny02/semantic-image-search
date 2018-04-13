@@ -163,7 +163,7 @@ def run_inference_on_image():
       node_lookup = NodeLookup()
 
       top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
-      CONFIDENCE = 0.2
+      CONFIDENCE = 0.4
       topCls = [ node_lookup.id_to_string(node_id) for node_id in top_k if predictions[node_id] > CONFIDENCE]
       distinct = set(topCls)
       if len(distinct) > 0:
