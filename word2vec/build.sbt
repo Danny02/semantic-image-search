@@ -17,5 +17,6 @@ libraryDependencies ++= Seq(
   "org.nd4j" % "nd4j-native" % nd4jVersion classifier "macosx-x86_64-avx2",
   "com.typesafe.akka" %% "akka-http" % "10.0.10",
   "com.typesafe" % "config" % "1.3.2",
-  "org.slf4j" % "slf4j-simple" % "1.7.25"
+  "org.slf4j" % "slf4j-simple" % "1.7.25",
+  "com.drewnoakes" % "metadata-extractor" % "2.11.0"
 )
