@@ -5,7 +5,10 @@
 ## was zeigt die weboberfläche an
 
 # Prepare
-# Download Model
+## Download Model
+## getting started with scala
+* IntelliJ mit Scala Plugin
+* sbt installieren
 
 # Advanced
 ## choose different Models
