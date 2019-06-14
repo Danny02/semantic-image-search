@@ -7,6 +7,7 @@ import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 
 object WebServer extends RouteConcatenation {
+
   def main(args: Array[String]) {
     implicit val system       = ActorSystem("server-system")
     implicit val materializer = ActorMaterializer()

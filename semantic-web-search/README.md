@@ -1,6 +1,7 @@
 # Introduction
 ## DL4J
 ## Word2Vec
+![](https://deeplearning4j.org/img/countries_capitals.png)
 ## wie funktioniert unser Index/Suche
 ## was zeigt die weboberfläche an
 

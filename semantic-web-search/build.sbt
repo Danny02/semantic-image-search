@@ -1,6 +1,5 @@
 val scalaV              = "2.12.4"
 val deeplearningVersion = "0.9.1"
-val nd4jVersion         = "0.9.1"
 val akkaVersion         = "10.0.10"
 val monixVersion        = "3.0.0-RC1"
 
@@ -17,8 +16,9 @@ lazy val server = (project in file("server"))
       "com.vmunier"        %% "scalajs-scripts"      % "1.1.2",
       "org.deeplearning4j" % "deeplearning4j-core"   % deeplearningVersion,
       "org.deeplearning4j" % "deeplearning4j-nlp"    % deeplearningVersion,
-      "org.nd4j"           % "nd4j-native-platform"  % nd4jVersion,
-//      "org.nd4j"           % "nd4j-native"           % nd4jVersion classifier "macosx-x86_64-avx2",
+      "org.deeplearning4j" % "deeplearning4j-zoo"    % deeplearningVersion,
+      "org.nd4j"           % "nd4j-native-platform"  % deeplearningVersion,
+      "org.nd4j"           % "nd4j-native"           % deeplearningVersion classifier "macosx-x86_64-avx2",
       "org.slf4j"      % "slf4j-simple"       % "1.7.25",
       "com.drewnoakes" % "metadata-extractor" % "2.11.0",
       "io.monix"       %% "monix"             % monixVersion

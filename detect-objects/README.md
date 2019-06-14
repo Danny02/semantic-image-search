@@ -1,6 +1,8 @@
 # Introduction
 ## store in image metadata
 
+![](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/img/kites_detections_output.jpg)
+
 # Setup
 ## dependencies
  * exiftool
